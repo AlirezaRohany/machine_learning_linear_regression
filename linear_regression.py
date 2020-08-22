@@ -15,7 +15,8 @@ data = pandas.read_csv("student-mat.csv", sep=";")
 print(data.head())
 
 # choosing some good attributes for prediction
-data = data[["G1", "G2", "G3", "studytime", "failures", "absences"]]
+selected_features=["G1", "G2", "G3", "studytime", "failures", "absences"]
+data = data[selected_features]
 
 print(data.head(), "\n")
 
@@ -29,7 +30,7 @@ x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y
 # print(x_test)
 # print(y_test)
 
-'''best_model_accuracy = 0
+best_model_accuracy = 0
 for i in range(30):
     x_train, x_test, y_train, y_test = sklearn.model_selection.train_test_split(X, Y, test_size=0.1)
     # linear regression
@@ -43,20 +44,27 @@ for i in range(30):
     if accuracy > best_model_accuracy:
         best_model_accuracy=accuracy
         with open("studentmodel.pickle", "wb") as f:
-            pickle.dump(linear, f)'''
+            pickle.dump(linear, f)
+print("Best accuracy: ",best_model_accuracy)
 
 # use model
 pickle_in = open("studentmodel.pickle", "rb")
 linear = pickle.load(pickle_in)
 
-accuracy = linear.score(x_test, y_test)
-
-print("Accuracy: ", accuracy, "\n")
 print("Coefficient: \n", linear.coef_, "\n")
 print("Intercept: \n", linear.intercept_, "\n")
 
 predictions = linear.predict(x_test)
-
 for i in range(len(predictions)):
     print("Model predict:", predictions[i], "    Real value: ", y_test[i])
     print(x_test[i])
+
+#ploting data
+for feature in selected_features :
+    if feature!="G3":
+        style.use("ggplot")
+        pyplot.scatter(data[feature],data[goal_feature])
+        pyplot.xlabel(feature)
+        pyplot.ylabel("Final grade")
+        pyplot.show()
+
