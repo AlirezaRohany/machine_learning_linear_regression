@@ -15,7 +15,7 @@ data = pandas.read_csv("student-mat.csv", sep=";")
 print(data.head())
 
 # choosing some good attributes for prediction
-selected_features=["G1", "G2", "G3", "studytime", "failures", "absences"]
+selected_features = ["G1", "G2", "G3", "studytime", "failures", "absences"]
 data = data[selected_features]
 
 print(data.head(), "\n")
@@ -42,10 +42,10 @@ for i in range(30):
 
     # save model
     if accuracy > best_model_accuracy:
-        best_model_accuracy=accuracy
+        best_model_accuracy = accuracy
         with open("studentmodel.pickle", "wb") as f:
             pickle.dump(linear, f)
-print("Best accuracy: ",best_model_accuracy)
+print("Best accuracy: ", best_model_accuracy)
 
 # use model
 pickle_in = open("studentmodel.pickle", "rb")
@@ -59,12 +59,26 @@ for i in range(len(predictions)):
     print("Model predict:", predictions[i], "    Real value: ", y_test[i])
     print(x_test[i])
 
-#ploting data
-for feature in selected_features :
-    if feature!="G3":
-        style.use("ggplot")
-        pyplot.scatter(data[feature],data[goal_feature])
+# plotting all data
+style.use("ggplot")
+
+for feature in selected_features:
+    if feature != "G3":
+        pyplot.scatter(data[feature], data[goal_feature], color="red")
         pyplot.xlabel(feature)
         pyplot.ylabel("Final grade")
+        pyplot.title("All data")
         pyplot.show()
 
+# plotting test data vs predictions
+for j in range(5):
+    for i in range(len(predictions)):
+        pyplot.scatter(x_test[i][j], y_test[i], color="blue")
+        pyplot.scatter(x_test[i][j], predictions[i], color="orange")
+    if j < 2:
+        pyplot.xlabel(selected_features[j])
+    else:
+        pyplot.xlabel(selected_features[j + 1])
+    pyplot.ylabel("Final grade")
+    pyplot.title("Test data(blue) vs Predictions(orange)")
+    pyplot.show()
